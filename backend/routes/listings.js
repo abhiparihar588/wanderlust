@@ -15,6 +15,11 @@ const constructListing = (req, res, next) => {
       country: req.body.country,
       price: Number(req.body.price),
     };
+    delete req.body.title;
+    delete req.body.description;
+    delete req.body.location;
+    delete req.body.country;
+    delete req.body.price;
   }
   next();
 };
