@@ -41,6 +41,8 @@ export default function ListingDetail() {
   if (!listing) return <div className="loader text-danger">Listing not found</div>;
 
   const isOwner = user && listing.owner === user._id;
+  const isAdmin = user && user.role === 'admin';
+  const canEdit = isOwner || isAdmin;
 
   return (
     <div className="container detail-container">
@@ -67,7 +69,7 @@ export default function ListingDetail() {
           </div>
         </div>
 
-        {isOwner && (
+        {canEdit && (
           <div className="owner-actions">
             <button className="btn-primary edit-btn" onClick={() => navigate(`/edit/${id}`)}>
               <Edit size={16} /> Edit

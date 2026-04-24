@@ -56,3 +56,20 @@ module.exports.logout = (req, res) => {
         res.status(200).json({ message: "Logout successful" });
     });
 };
+
+module.exports.getAllUsers = wrapAsync(async (req, res) => {
+    const users = await User.find({}).select("-salt -hash"); // Exclude password hash details
+    res.status(200).json({ users });
+});
+
+module.exports.destroyUser = wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    if (req.user._id === id) {
+        throw new ExpressError(400, "You cannot delete yourself!");
+    }
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+        throw new ExpressError(404, "User not found");
+    }
+    res.status(200).json({ message: "User deleted successfully", deletedUser });
+});

@@ -2,6 +2,7 @@ require("dotenv").config();
 const userRouter = require("./routes/users.js");
 const listingRouter = require("./routes/listings.js");
 const reviewRouter = require("./routes/reviews.js");
+const adminRouter = require("./routes/admin.js");
 const ExpressError = require("./utils/ExpressError.js");
 const express = require("express");
 const fs = require("fs");
@@ -72,6 +73,7 @@ main().then(() => {
 app.use("/api/users", userRouter);
 app.use("/api/listings", listingRouter);
 app.use("/api/listings/:id/reviews", reviewRouter);
+app.use("/api/admin", adminRouter);
 
 app.all("/api/*splat", (req, res, next) => {
   next(new ExpressError(404, "API Endpoint Not Found!"));

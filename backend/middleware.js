@@ -13,7 +13,7 @@ module.exports.isOwner = async (req, res, next) => {
         return res.status(404).json({ error: "Listing not found" });
     }
 
-    if (!listing.owner.equals(req.user._id)) {
+    if (req.user.role !== "admin" && (!listing.owner || !listing.owner.equals(req.user._id))) {
         return res.status(403).json({ error: "Forbidden: You are not the owner!" });
     }
     next();
@@ -22,7 +22,7 @@ module.exports.isOwner = async (req, res, next) => {
 module.exports.isReviewAuthor = async (req, res, next) => {
     let { id, reviewId } = req.params;
     const review = await Review.findById(reviewId);
-    if (!review.author.equals(req.user._id)) {
+    if (req.user.role !== "admin" && (!review.author || !review.author.equals(req.user._id))) {
         return res.status(403).json({ error: "Forbidden: You didn't create this review" });
     }
     next();
@@ -42,6 +42,14 @@ module.exports.isLoggedIn = (req, res, next) => {
         });
     } else {
         return res.status(401).json({ error: "You are not authenticated!" });
+    }
+};
+
+module.exports.isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === "admin") {
+        next();
+    } else {
+        return res.status(403).json({ error: "Forbidden: Admins only!" });
     }
 };
 

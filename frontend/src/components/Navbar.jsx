@@ -24,6 +24,12 @@ export default function Navbar() {
         <div className="nav-links">
           {user ? (
             <>
+              {user.role === 'admin' && (
+                <Link to="/admin" className="nav-link add-listing" style={{ marginRight: '1rem' }}>
+                  <Compass size={18} />
+                  <span>Dashboard</span>
+                </Link>
+              )}
               <Link to="/new" className="nav-link add-listing">
                 <PlusCircle size={18} />
                 <span>Add Listing</span>
